@@ -1,0 +1,27 @@
+{
+  "name": "next-task",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "mongoose": "^6.11.1",
+    "next": "^14.2.7",
+    "next-auth": "^4.24.7",
+    "react": "^18",
+    "react-dom": "^18",
+    "swr": "^2.2.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.1",
+    "@types/react": "^18.3.4",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.4",
+    "typescript": "^5.5.4"
+  }
+}
