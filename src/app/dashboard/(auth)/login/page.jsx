@@ -6,44 +6,40 @@ import { getProviders, signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-const Login = ({ title }) => {
-  console.log(title);
-  const session = useSession();
+const LoginPage = ({ title: pageTitle }) => {
+  const { data: session, status } = useSession();
   const router = useRouter();
-  const params = useSearchParams();
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const searchParams = useSearchParams();
+  const [loginError, setLoginError] = useState("");
+  const [loginSuccess, setLoginSuccess] = useState("");
 
   useEffect(() => {
-    setError(params.get("error"));
-    setSuccess(params.get("success"));
-  }, [params]);
+    setLoginError(searchParams.get("error") ?? "");
+    setLoginSuccess(searchParams.get("success") ?? "");
+  }, [searchParams]);
 
-  if (session.status === "loading") {
+  if (status === "loading") {
     return <p className="text-center text-7xl text-white font-bold mt-10">Loading...</p>;
   }
 
-  if (session.status === "authenticated") {
-    router?.push("/dashboard");
+  if (status === "authenticated") {
+    router.push("/dashboard");
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const email = e.target[0].value;
-    const password = e.target[1].value;
+  const handleLoginSubmit = (event) => {
+    event.preventDefault();
+    const email = event.currentTarget[0].value;
+    const password = event.currentTarget[1].value;
 
-    signIn("credentials", {
-      email,
-      password,
-    });
+    signIn("credentials", { email, password });
   };
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>{title || (success ? success : "Welcome Back")}</h1>
+      <h1 className={styles.title}>{pageTitle || loginSuccess || "Welcome Back"}</h1>
       <h2 className={styles.subtitle}>Please sign in to see the dashboard.</h2>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <form onSubmit={handleLoginSubmit} className={styles.form}>
         <input
           type="text"
           placeholder="Email"
@@ -57,12 +53,10 @@ const Login = ({ title }) => {
           className={styles.input}
         />
         <button className={styles.button}>Login</button>
-        {error && error}
+        {loginError && <p className={styles.error}>{loginError}</p>}
       </form>
       <button
-        onClick={() => {
-          signIn("google");
-        }}
+        onClick={() => signIn("google")}
         className={styles.button + " " + styles.google}
       >
         Login with Google
@@ -71,14 +65,6 @@ const Login = ({ title }) => {
       <Link className={styles.link} href="/dashboard/register">
         Create new account
       </Link>
-      {/* <button
-        onClick={() => {
-          signIn("github");
-        }}
-        className={styles.button + " " + styles.github}
-      >
-        Login with Github
-      </button> */}
     </div>
   );
 };
