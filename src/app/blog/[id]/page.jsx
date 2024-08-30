@@ -3,79 +3,64 @@ import styles from "./page.module.css";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-async function getData(id) {
-  const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
+async function getPostData(id) {
+  const response = await fetch(`http://localhost:3000/api/posts/${id}`, {
     cache: "no-store",
   });
 
-  if (!res.ok) {
-    notFound();
+  if (!response.ok) {
+    throw new Error(`Failed to fetch data: ${response.status}`);
   }
 
-  return res.json();
+  return response.json();
 }
 
-export async function generateMetadata({ params }) {
-  try {
-    const post = await getData(params.id);
-
-    if (!post || !post.title || !post.desc) {
-      throw new Error("A blog post is missing one of the required properties: title, desc");
-    }
-
-    return {
-      title: post.title,
-      description: post.desc,
-    };
-  } catch (error) {
-    if (error.status === 404) {
-      notFound();
-    } else if (error instanceof Error) {
-      console.error(error);
-      throw error;
-    } else {
-      throw new Error("An unexpected error occurred");
-    }
+export async function generateMetadata({ params: { id } }) {
+  const post = await getData(id);
+  if (!post || !post.title || !post.description) {
+    return notFound();
   }
+
+  return {
+    title: post.title,
+    description: post.description,
+  };
 }
 
-const BlogPost = async ({ params }) => {
-  const data = await getData(params.id);
-  if (!data) return <div>Post not found</div>;
-  if (!data.title) return <div>Post title is missing</div>;
-  if (!data.desc) return <div>Post description is missing</div>;
-  if (!data.img) return <div>Post image is missing</div>;
-  if (!data.username) return <div>Post author is missing</div>;
-  if (!data.content) return <div>Post content is missing</div>;
+const BlogPost = async ({ params: { id } }) => {
+  const postData = await getPostData(id);
+  if (!postData) return <div>Post not found</div>;
+
+  const { title, description, image, author, content } = postData;
 
   return (
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.info}>
-          <h1 className={styles.title}>{data.title}</h1>
-          <p className={styles.desc}>{data.desc}</p>
+          <h1 className={styles.title}>{title}</h1>
+          <p className={styles.description}>{description}</p>
           <div className={styles.author}>
             <Image
-              src={data.img}
-              alt={data.username}
+              src={image}
+              alt={author}
               width={40}
               height={40}
               className={styles.avatar}
             />
-            <span className={styles.username}>{data.username}</span>
+            <span className={styles.authorName}>{author}</span>
           </div>
         </div>
         <div className={styles.imageContainer}>
           <Image
-            src={data.img}
-            alt={data.title}
+            src={image}
+            alt={title}
             fill={true}
             className={styles.image}
           />
         </div>
       </div>
       <div className={styles.content}>
-        <p className={styles.text}>{data.content}</p>
+        <p className={styles.textContent}>{content}</p>
       </div>
     </div>
   );
