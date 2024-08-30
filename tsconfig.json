@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "src/app/dashboard/(auth)/register/page.jsx", "src/app/dashboard/(auth)/page.jsx", "src/components/footer/Footer.jsx", "src/components/navbar/Navbar.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/(auth)/login/page.jsx"  ],
+, "src/app/dashboard/(auth)/register/page.jsx", "src/app/dashboard/(auth)/page.jsx", "src/components/footer/Footer.jsx", "src/components/navbar/Navbar.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/(auth)/login/page.jsx", "src/app/blog/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]
