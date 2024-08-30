@@ -16,7 +16,7 @@ async function getPostData(id) {
 }
 
 export async function generateMetadata({ params: { id } }) {
-  const post = await getData(id);
+  const post = await getPostData(id);
   if (!post || !post.title || !post.description) {
     return notFound();
   }
