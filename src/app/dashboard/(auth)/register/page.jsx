@@ -70,7 +70,7 @@ const Register = () => {
           required
           className={styles.input}
         />
-        <button className={styles.button}>Register</button>
+        <button className={styles.button}>Register Form</button>
         {error && "Something went wrong!"}
       </form>
       <span className={styles.or}>- OR -</span>
